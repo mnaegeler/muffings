@@ -22,6 +22,24 @@ App::after(function($request, $response)
 	//
 });
 
+Route::filter('admin', function()
+{
+  if( !Auth::user()->check() &&  Request::url() <> action('UserController@postLogin')){
+     
+      return Redirect::guest('admin');
+  }elseif(Request::url() <> action('UserController@postLogin') && Auth::user()->check()){
+
+
+            $navs = Nav::getNavs();
+            View::share('navs', $navs);
+            $user = User::find(Auth::user()->get()->id);
+            View::share('user', $user);
+            $basic = Seo::getInfoBasic(); 
+            View::share('basic', $basic);
+  }
+        
+});
+
 /*
 |--------------------------------------------------------------------------
 | Authentication Filters
